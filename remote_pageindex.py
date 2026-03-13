@@ -23,9 +23,6 @@ async def call_llm(prompt, model="gpt-4.1", temperature=0):
 
     import os, requests
 
-# You can also use our GitHub repo to generate PageIndex tree
-# https://github.com/VectifyAI/PageIndex
-
 import os
 pdf_url = "https://artificialintelligenceact.eu/wp-content/uploads/2021/08/The-AI-Act.pdf"
 pdf_path = os.path.join("./data", pdf_url.split('/')[-1])
@@ -37,7 +34,7 @@ with open(pdf_path, "wb") as f:
     f.write(response.content)
 print(f"Downloaded {pdf_url}")
 
-# doc_id = pi_client.submit_document(pdf_path)["doc_id"]
+doc_id = pi_client.submit_document(pdf_path)["doc_id"]
 doc_id = "pi-cmmj17gz40821ksqn34ymbh2e"
 print('Document Submitted:', doc_id)
 
