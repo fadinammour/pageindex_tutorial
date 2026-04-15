@@ -1,6 +1,6 @@
 import os
 import json
-import openai
+import ollama
 from dotenv import load_dotenv
 import pageindex.utils as utils
 
@@ -8,28 +8,31 @@ load_dotenv()
 CHAT_LLM_NAME = os.getenv("CHAT_LLM_NAME")
 
 OLLAMA_URL = os.getenv("OLLAMA_URL")
-client = openai.AsyncOpenAI(
-    base_url=OLLAMA_URL,
-    api_key="ollama"
-)
+client = ollama.AsyncClient(host=OLLAMA_URL)
 
 # +
 async def call_llm_json(prompt, model=CHAT_LLM_NAME, temperature=0):
-    response = await client.chat.completions.create(
+
+    response = await client.chat(
         model=model,
         messages=[{"role": "user", "content": prompt}],
-        temperature=temperature,
-        response_format={ "type": "json_object" }
+        format="json", 
+        options={
+            "temperature": temperature
+        } 
     )
-    return response.choices[0].message.content.strip()
+    return response['message']['content'].strip()
 
 async def call_llm(prompt, model=CHAT_LLM_NAME, temperature=0):
-    response = await client.chat.completions.create(
+
+    response = await client.chat(
         model=model,
         messages=[{"role": "user", "content": prompt}],
-        temperature=temperature,
+        options={
+            "temperature": temperature
+        }
     )
-    return response.choices[0].message.content.strip()
+    return response['message']['content'].strip()
 # -
 
 # You can also use our GitHub repo to generate PageIndex tree
